@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Weak Topics — StudyAI{% endblock %}
+{% block page_title %}Knowledge Gaps{% endblock %}
+{% block content %}
+<div class="page-max">
+  <div class="card" style="background:linear-gradient(135deg,#fff5f5,#fff);border-color:#fecaca;margin-bottom:1.5rem">
+    <div style="display:flex;align-items:center;gap:1rem">
+      <span style="font-size:2.5rem">📊</span>
+      <div>
+        <h2 class="card-title" style="margin:0">Knowledge Gap Detector</h2>
+        <p class="card-sub" style="margin:0">Topics where you've struggled on quizzes — detected automatically by AI.</p>
+      </div>
+    </div>
+  </div>
+
+  {% if topics %}
+  <p class="hint" style="margin-bottom:1rem">{{ topics|length }} weak topic{{ 's' if topics|length != 1 }} detected</p>
+  {% for topic in topics %}
+  <div class="weak-row">
+    <span class="weak-icon">⚠️</span>
+    <div class="weak-info">
+      <div class="weak-name">{{ topic.topic }}</div>
+      <div class="weak-date">Detected {{ topic.detected_at[:10] }}</div>
+    </div>
+    <a href="{{ url_for('ask') }}" class="btn btn-sm btn-outline">💬 Ask AI</a>
+  </div>
+  {% endfor %}
+
+  <div class="tip-box mt-3">
+    <strong>💡 How to improve</strong>
+    <ul>
+      <li>Use "Ask AI" to get an explanation for each weak topic</li>
+      <li>Re-read the relevant sections of your notes</li>
+      <li>Generate a new quiz focused on those areas</li>
+      <li>Create a study plan with extra time for weak topics</li>
+    </ul>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🎉</div>
+    <h3>No weak topics yet!</h3>
+    <p>Take a quiz and any topics you struggle with will appear here automatically.</p>
+    <a href="{{ url_for('quiz') }}" class="btn btn-primary">🧪 Take a Quiz</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Server Error — StudyAI{% endblock %}
+{% block body %}
+<div class="error-page">
+  <div class="error-content">
+    <div class="error-emoji">⚡</div>
+    <h1>500 — Something Went Wrong</h1>
+    <p>The server hit an unexpected error. Your data is safe — please try again.</p>
+    <div class="tip-box" style="text-align:left;max-width:400px;margin:1.5rem auto">
+      <strong>Common causes:</strong>
+      <ul>
+        <li>OpenAI API key missing or invalid</li>
+        <li>Rate limit reached on the AI service</li>
+        <li>File too large or corrupt</li>
+      </ul>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      {% if session.user_id %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">🏠 Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('index') }}" class="btn btn-primary">🏠 Home</a>
+      {% endif %}
+      <button onclick="history.back()" class="btn btn-outline">← Try Again</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

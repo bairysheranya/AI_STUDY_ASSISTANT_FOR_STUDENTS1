@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Upload Notes — StudyAI{% endblock %}
+{% block page_title %}Upload Notes{% endblock %}
+{% block content %}
+<div class="two-col">
+  <!-- Left: Upload form -->
+  <div>
+    <div class="card">
+      <h2 class="card-title">📤 Upload a New Note</h2>
+      <p class="card-sub">Supports PDF, TXT, and Markdown files (max 16 MB)</p>
+      <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data" id="upload-form">
+        <div class="drop-zone" id="drop-zone">
+          <div class="dz-icon">📁</div>
+          <p class="dz-text">Drag &amp; drop your file here, or <strong>click to browse</strong></p>
+          <p class="dz-hint">PDF · TXT · MD</p>
+        </div>
+        <input type="file" id="file-input" name="file" accept=".pdf,.txt,.md" style="display:none" required>
+        <div id="file-chosen" class="file-chosen" style="display:none"></div>
+        <button type="submit" class="btn btn-primary w-full mt-2">⬆️ Upload &amp; Process</button>
+      </form>
+    </div>
+    <div class="tip-box mt-2">
+      <strong>💡 Tips for best results</strong>
+      <ul>
+        <li>Use notes with clear headings and structure</li>
+        <li>PDFs with real text work better than scanned images</li>
+        <li>One topic per file gives more focused quizzes</li>
+        <li>Longer notes (500+ words) produce richer summaries</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Right: Notes list -->
+  <div>
+    <div class="section-header">
+      <h2 class="section-title" style="margin-bottom:0">📚 Your Notes ({{ notes|length }})</h2>
+    </div>
+    {% if notes %}
+    <div class="notes-list">
+      {% for note in notes %}
+      <div class="note-row" id="note-{{ note.id }}">
+        <div class="note-icon">{{ '📕' if note.filename.endswith('.pdf') else '📄' }}</div>
+        <div class="note-info">
+          <div class="note-name">{{ note.filename }}</div>
+          <div class="note-date">{{ note.uploaded_at[:10] }}</div>
+        </div>
+        <div class="note-actions">
+          <a href="{{ url_for('summary', note_id=note.id) }}"     class="btn btn-sm btn-outline" title="Summary">📝</a>
+          <a href="{{ url_for('concept_map', note_id=note.id) }}" class="btn btn-sm btn-outline" title="Concept Map">🗺️</a>
+          <a href="{{ url_for('estimator', note_id=note.id) }}"   class="btn btn-sm btn-outline" title="Time Estimate">⏱️</a>
+          <button class="btn btn-sm btn-danger del-btn" data-id="{{ note.id }}" title="Delete">🗑️</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>No notes uploaded yet. Upload your first note!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

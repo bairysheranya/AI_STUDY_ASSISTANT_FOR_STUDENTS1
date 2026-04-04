@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}Study Planner — StudyAI{% endblock %}
+{% block page_title %}Smart Study Planner{% endblock %}
+{% block content %}
+<div class="page-max">
+  <div class="card">
+    <h2 class="card-title">📅 Generate Your Study Plan</h2>
+    <p class="card-sub">Enter your subject and exam date — AI creates a personalised day-by-day revision schedule.</p>
+    <form method="POST" action="{{ url_for('planner') }}">
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="label">📚 Subject</label>
+          <input class="input" type="text" name="subject" placeholder="e.g. Machine Learning" required>
+        </div>
+        <div class="form-group">
+          <label class="label">📆 Exam Date</label>
+          <input class="input" type="date" name="exam_date" required>
+        </div>
+        <div class="form-group">
+          <label class="label">⏰ Hours / Day</label>
+          <select class="input" name="hours_per_day">
+            <option value="1">1 hour</option>
+            <option value="2" selected>2 hours</option>
+            <option value="3">3 hours</option>
+            <option value="4">4 hours</option>
+            <option value="6">6 hours</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">✨ Generate Plan</button>
+    </form>
+  </div>
+
+  {% if plan %}
+  <div class="plan-header">
+    <div>
+      <div class="plan-label">Study Plan</div>
+      <div class="plan-subject">{{ plan.subject }}</div>
+      <div class="plan-date">Exam: {{ plan.exam_date }}</div>
+    </div>
+    <button onclick="window.print()" class="btn btn-outline btn-sm">🖨️ Print</button>
+  </div>
+  {% if plan.data.overview %}
+  <div class="plan-overview">{{ plan.data.overview }}</div>
+  {% endif %}
+  {% if plan.data.daily_plan %}
+  <h3 class="section-title">📋 Daily Schedule</h3>
+  {% for day in plan.data.daily_plan %}
+  <div class="day-row">
+    <div class="day-num">D{{ day.day }}</div>
+    <div class="day-body">
+      <div class="day-focus">{{ day.focus }}</div>
+      {% if day.date %}<div class="day-date">📅 {{ day.date }}</div>{% endif %}
+      {% for task in day.tasks %}
+      <div class="day-task">• {{ task }}</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="action-bar mt-3">
+    <a href="{{ url_for('quiz') }}" class="btn btn-primary">🧪 Take a Quiz</a>
+    <a href="{{ url_for('planner') }}" class="btn btn-outline">🔄 New Plan</a>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if existing_plans and not plan %}
+  <h3 class="section-title">🕑 Recent Plans</h3>
+  {% for p in existing_plans %}
+  <div class="card" style="padding:.875rem 1.25rem;margin-bottom:.75rem">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-weight:600">{{ p.subject }}</div>
+        <div class="hint">Exam: {{ p.exam_date }} · Created {{ p.created_at[:10] }}</div>
+      </div>
+      <span class="badge badge-amber">{{ p.exam_date }}</span>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

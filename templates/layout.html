@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="shell">
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <div class="logo"><span class="logo-box">🎓</span> StudyAI</div>
+      <div class="sb-user">👤 {{ session.username }}</div>
+    </div>
+    <nav class="sb-nav">
+      <p class="sb-section">Main</p>
+      <a href="{{ url_for('dashboard') }}" class="sb-link {% if request.endpoint=='dashboard' %}active{% endif %}">
+        <span>🏠</span> Dashboard
+      </a>
+      <a href="{{ url_for('upload') }}" class="sb-link {% if request.endpoint=='upload' %}active{% endif %}">
+        <span>📤</span> Upload Notes
+      </a>
+      <p class="sb-section">AI Tools</p>
+      <a href="{{ url_for('ask') }}" class="sb-link {% if request.endpoint=='ask' %}active{% endif %}">
+        <span>💬</span> Ask AI
+      </a>
+      <a href="{{ url_for('quiz') }}" class="sb-link {% if request.endpoint=='quiz' %}active{% endif %}">
+        <span>🧪</span> Quiz Generator
+      </a>
+      <a href="{{ url_for('weak_topics') }}" class="sb-link {% if request.endpoint=='weak_topics' %}active{% endif %}">
+        <span>📊</span> Weak Topics
+      </a>
+      <p class="sb-section">Planning</p>
+      <a href="{{ url_for('planner') }}" class="sb-link {% if request.endpoint=='planner' %}active{% endif %}">
+        <span>📅</span> Study Planner
+      </a>
+      <a href="{{ url_for('upload') }}" class="sb-link">
+        <span>🗺️</span> Concept Maps
+      </a>
+      <a href="{{ url_for('upload') }}" class="sb-link">
+        <span>⏱️</span> Time Estimator
+      </a>
+    </nav>
+    <div class="sb-foot">
+      <a href="{{ url_for('profile') }}" class="sb-link {% if request.endpoint=='profile' %}active{% endif %}">
+        <span>👤</span> My Profile
+      </a>
+      <a href="{{ url_for('logout') }}" class="sb-link sb-logout">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="ham" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-user">{{ session.username }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-sm btn-ghost">Logout</a>
+      </div>
+    </header>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

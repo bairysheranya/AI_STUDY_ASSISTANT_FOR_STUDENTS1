@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}StudyAI — Study Smarter with AI{% endblock %}
+{% block body %}
+<div class="landing">
+  <nav class="land-nav">
+    <div class="logo"><span class="logo-box">🎓</span> StudyAI</div>
+    <div class="land-nav-links">
+      <a href="{{ url_for('login') }}" class="btn btn-ghost">Log in</a>
+      <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started Free</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">✨ AI-Powered · Free to Use · No Setup Required</div>
+    <h1 class="hero-h1">Study Smarter,<br>Not <span class="accent">Harder</span></h1>
+    <p class="hero-sub">Upload your notes, generate quizzes, detect weak topics, and plan your exam schedule — all powered by AI.</p>
+    <div class="hero-btns">
+      <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">🚀 Start Studying Free</a>
+      <a href="{{ url_for('login') }}"  class="btn btn-outline-white btn-lg">Log In</a>
+    </div>
+  </section>
+
+  <section class="land-features">
+    <h2>Everything You Need to Ace Your Exams</h2>
+    <p class="land-features-sub">8 powerful AI features built for students</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">📤</div><h3>Upload Notes</h3><p>PDF, TXT, or Markdown — text extracted instantly.</p></div>
+      <div class="feat-card"><div class="feat-icon">📝</div><h3>AI Summaries</h3><p>Key points, core concepts, quick revision notes.</p></div>
+      <div class="feat-card"><div class="feat-icon">💬</div><h3>Ask AI</h3><p>Ask anything — answers drawn from your own notes.</p></div>
+      <div class="feat-card"><div class="feat-icon">🧪</div><h3>Quiz Generator</h3><p>Auto-generated MCQ and short-answer quizzes.</p></div>
+      <div class="feat-card"><div class="feat-icon">📊</div><h3>Weak Topic Detector</h3><p>AI finds your knowledge gaps after every quiz.</p></div>
+      <div class="feat-card"><div class="feat-icon">📅</div><h3>Study Planner</h3><p>Personalised daily schedule from your exam date.</p></div>
+      <div class="feat-card"><div class="feat-icon">🗺️</div><h3>Concept Maps</h3><p>Visual topic relationship diagrams from notes.</p></div>
+      <div class="feat-card"><div class="feat-icon">⏱️</div><h3>Time Estimator</h3><p>Difficulty score, study hours, and practice questions needed.</p></div>
+    </div>
+  </section>
+
+  <footer class="land-footer">© 2024 StudyAI · Powered by OpenAI · Free for Students</footer>
+</div>
+{% endblock %}

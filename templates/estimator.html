@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Time Estimator — {{ note.filename }}{% endblock %}
+{% block page_title %}Study Time Estimator{% endblock %}
+{% block content %}
+<div class="page-max">
+  <div class="note-header-card">
+    <div class="nhc-icon">⏱️</div>
+    <div>
+      <div class="nhc-label">Study Time Estimator</div>
+      <div class="nhc-title">{{ note.filename }}</div>
+    </div>
+  </div>
+  <div class="action-bar">
+    <a href="{{ url_for('summary', note_id=note.id) }}"     class="btn btn-outline btn-sm">📝 Summary</a>
+    <a href="{{ url_for('concept_map', note_id=note.id) }}" class="btn btn-outline btn-sm">🗺️ Map</a>
+    <a href="{{ url_for('upload') }}"                       class="btn btn-ghost btn-sm">← Back</a>
+  </div>
+
+  {% if estimate %}
+  <div class="est-grid">
+    <div class="est-card">
+      <div class="est-val">{{ estimate.estimated_hours }}h</div>
+      <div class="est-lbl">Estimated Study Time</div>
+    </div>
+    <div class="est-card">
+      <div class="est-val">{{ estimate.practice_questions }}</div>
+      <div class="est-lbl">Practice Questions</div>
+    </div>
+    <div class="est-card">
+      <div class="est-val">{{ estimate.difficulty_score }}/10</div>
+      <div class="est-lbl">Difficulty Score</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="diff-header">
+      <span class="card-title" style="margin:0">Difficulty Level</span>
+      <span class="badge {% if estimate.difficulty == 'Easy' %}badge-green{% elif estimate.difficulty == 'Hard' %}badge-rose{% else %}badge-amber{% endif %}">
+        {{ estimate.difficulty }}
+      </span>
+    </div>
+    <div class="diff-bar"><div class="diff-fill" style="width:0%" data-score="{{ estimate.difficulty_score }}"></div></div>
+    <div class="diff-labels"><span>Easy</span><span>Medium</span><span>Hard</span></div>
+  </div>
+
+  {% if estimate.key_areas %}
+  <div class="card">
+    <h3 class="card-title">🎯 Key Focus Areas</h3>
+    {% for area in estimate.key_areas %}
+    <div class="area-row"><span class="area-arrow">▸</span> {{ area }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if estimate.tips %}
+  <div class="tip-box">
+    <strong>💡 AI Study Tips</strong>
+    <ol style="margin-left:1.25rem;margin-top:.5rem">
+      {% for tip in estimate.tips %}<li>{{ tip }}</li>{% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="action-bar mt-3">
+    <a href="{{ url_for('quiz') }}"    class="btn btn-primary">🧪 Take a Quiz</a>
+    <a href="{{ url_for('planner') }}" class="btn btn-outline">📅 Create Study Plan</a>
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">⚠️</div><h3>Estimate unavailable</h3>
+    <p>Please try again.</p><a href="{{ url_for('upload') }}" class="btn btn-primary">← Back</a></div>
+  {% endif %}
+</div>
+{% endblock %}

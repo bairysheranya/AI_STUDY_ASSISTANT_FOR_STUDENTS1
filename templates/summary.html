@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Summary — {{ note.filename }}{% endblock %}
+{% block page_title %}AI Summary{% endblock %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="page-max">
+  <div class="note-header-card">
+    <div class="nhc-icon">📝</div>
+    <div>
+      <div class="nhc-label">AI Summary</div>
+      <div class="nhc-title">{{ note.filename }}</div>
+      <div class="nhc-date">Uploaded {{ note.uploaded_at[:10] }}</div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <a href="{{ url_for('quiz') }}" class="btn btn-primary btn-sm">🧪 Take Quiz</a>
+    <a href="{{ url_for('concept_map', note_id=note.id) }}" class="btn btn-outline btn-sm">🗺️ Concept Map</a>
+    <a href="{{ url_for('estimator', note_id=note.id) }}" class="btn btn-outline btn-sm">⏱️ Time Estimate</a>
+    <a href="{{ url_for('ask') }}" class="btn btn-outline btn-sm">💬 Ask AI</a>
+    <button class="btn btn-outline btn-sm" onclick="copyText('summary-output')">📋 Copy</button>
+    <a href="{{ url_for('upload') }}" class="btn btn-ghost btn-sm">← Back</a>
+  </div>
+
+  <div class="ai-card" id="summary-output">{{ summary_text }}</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  var el = document.getElementById('summary-output');
+  if (el && typeof marked !== 'undefined') el.innerHTML = marked.parse(el.textContent);
+</script>
+{% endblock %}

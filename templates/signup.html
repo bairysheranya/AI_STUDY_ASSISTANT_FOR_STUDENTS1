@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — StudyAI{% endblock %}
+{% block body %}
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="logo" style="justify-content:center;margin-bottom:1.5rem"><span class="logo-box">🎓</span> StudyAI</div>
+    <h2>Join 10,000+ Students</h2>
+    <p>Start studying smarter today with AI-powered tools built for students.</p>
+    <div class="auth-perks">
+      <div class="perk"><span>✅</span> 100% Free to get started</div>
+      <div class="perk"><span>🔒</span> Your notes are private &amp; secure</div>
+      <div class="perk"><span>🗺️</span> Visual concept maps included</div>
+      <div class="perk"><span>⏱️</span> AI study time predictions</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-box">
+      <h2>Create your free account</h2>
+      <p class="auth-sub">Start studying smarter in 30 seconds</p>
+      <form method="POST" action="{{ url_for('signup') }}">
+        <div class="form-group">
+          <label class="label">Username</label>
+          <input class="input" type="text" name="username" placeholder="e.g. alex_student" required minlength="3" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="label">Email Address</label>
+          <input class="input" type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="label">Password</label>
+          <input class="input" type="password" name="password" placeholder="Minimum 6 characters" required minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-primary w-full">🎓 Create Free Account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block title %}Quiz Generator — StudyAI{% endblock %}
+{% block page_title %}Quiz Generator{% endblock %}
+{% block content %}
+<div class="page-max">
+
+  <!-- Generator form -->
+  {% if not questions %}
+  <div class="card">
+    <h2 class="card-title">🧪 Generate a Quiz</h2>
+    <p class="card-sub">Select a note and choose how many questions. AI creates a mix of MCQ and short answer.</p>
+    <form method="POST" action="{{ url_for('quiz') }}">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="label">📚 Select Note</label>
+          <select name="note_id" class="input" required>
+            <option value="">Choose a note…</option>
+            {% for note in notes %}
+            <option value="{{ note.id }}">{{ note.filename }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="label">Number of Questions</label>
+          <select name="num_questions" class="input">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">✨ Generate Quiz</button>
+      {% if not notes %}
+      <p class="hint mt-1">⚠️ <a href="{{ url_for('upload') }}">Upload a note</a> first.</p>
+      {% endif %}
+    </form>
+  </div>
+  {% endif %}
+
+  <!-- Quiz questions -->
+  {% if questions %}
+  <div class="quiz-header-card">
+    <div><div class="quiz-label">Quiz Ready</div><div class="quiz-count">{{ questions|length }} Questions</div></div>
+    <div class="quiz-timer-wrap"><span>⏱️ Time:</span> <span id="timer" class="timer-num">00:00</span></div>
+  </div>
+
+  <script type="application/json" id="qdata">{{ questions | tojson }}</script>
+
+  <form id="quiz-form">
+    {% for q in questions %}
+    <div class="q-card">
+      <div class="q-num">Question {{ loop.index }} / {{ questions|length }} · {{ q.type | upper }}</div>
+      <div class="q-text">{{ q.question }}</div>
+      {% if q.type == 'mcq' and q.options %}
+      <div class="options">
+        {% for opt in q.options %}
+        <label class="option">
+          <input type="radio" name="q{{ loop.index0 }}" value="{{ opt[0] }}">
+          <span>{{ opt }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="short-ans">
+        <input type="text" name="q{{ loop.index0 }}" class="input" placeholder="Type your answer here…">
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-lg">✅ Submit Quiz</button>
+  </form>
+
+  <div id="quiz-result" class="mt-3"></div>
+
+  <div class="mt-3">
+    <a href="{{ url_for('quiz') }}" class="btn btn-outline">🔄 Generate New Quiz</a>
+  </div>
+  {% endif %}
+
+  {% if not questions and not notes %}
+  <div class="empty-state mt-3">
+    <div class="empty-icon">📚</div>
+    <h3>No notes found</h3>
+    <p>Upload study notes first, then generate a quiz.</p>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">📤 Upload Notes</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

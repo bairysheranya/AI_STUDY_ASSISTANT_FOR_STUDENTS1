@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — StudyAI{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+{% if not has_key %}
+<div class="banner-demo">
+  ⚡ <strong>Demo Mode</strong> — AI features show placeholder content.
+  Add <code>OPENAI_API_KEY</code> to your <code>.env</code> file to enable real AI.
+  <a href="https://platform.openai.com/api-keys" target="_blank">Get a key →</a>
+</div>
+{% endif %}
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-icon si-amber">📄</div><div><div class="stat-num">{{ stats.notes }}</div><div class="stat-lbl">Notes Uploaded</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-teal">🧪</div><div><div class="stat-num">{{ stats.quizzes }}</div><div class="stat-lbl">Quizzes Taken</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-rose">📊</div><div><div class="stat-num">{{ stats.weak }}</div><div class="stat-lbl">Weak Topics</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-green">📅</div><div><div class="stat-num">{{ stats.plans }}</div><div class="stat-lbl">Study Plans</div></div></div>
+</div>
+
+<!-- Feature cards -->
+<h2 class="section-title">🚀 Quick Actions</h2>
+<div class="action-grid">
+  <a href="{{ url_for('upload') }}" class="action-card">
+    <div class="ac-icon" style="background:#fef3d8">📤</div>
+    <div class="ac-title">Upload Notes</div>
+    <div class="ac-desc">Add PDF or text files for AI analysis</div>
+    <div class="ac-arrow">Upload →</div>
+  </a>
+  <a href="{{ url_for('ask') }}" class="action-card">
+    <div class="ac-icon" style="background:#dbeafe">💬</div>
+    <div class="ac-title">Ask AI</div>
+    <div class="ac-desc">Get contextual answers from your notes</div>
+    <div class="ac-arrow">Ask now →</div>
+  </a>
+  <a href="{{ url_for('quiz') }}" class="action-card">
+    <div class="ac-icon" style="background:#d1faf8">🧪</div>
+    <div class="ac-title">Generate Quiz</div>
+    <div class="ac-desc">MCQ and short-answer practice tests</div>
+    <div class="ac-arrow">Start →</div>
+  </a>
+  <a href="{{ url_for('planner') }}" class="action-card">
+    <div class="ac-icon" style="background:#d1fae5">📅</div>
+    <div class="ac-title">Study Planner</div>
+    <div class="ac-desc">Day-by-day schedule from your exam date</div>
+    <div class="ac-arrow">Plan →</div>
+  </a>
+  <a href="{{ url_for('weak_topics') }}" class="action-card">
+    <div class="ac-icon" style="background:#fee2e2">📊</div>
+    <div class="ac-title">Weak Topics</div>
+    <div class="ac-desc">Review knowledge gaps found in quizzes</div>
+    <div class="ac-arrow">Review →</div>
+  </a>
+  {% if recent_notes %}
+  <a href="{{ url_for('summary', note_id=recent_notes[0].id) }}" class="action-card">
+    <div class="ac-icon" style="background:#ecfdf5">📝</div>
+    <div class="ac-title">AI Summary</div>
+    <div class="ac-desc">Key points from your latest note</div>
+    <div class="ac-arrow">View →</div>
+  </a>
+  <a href="{{ url_for('concept_map', note_id=recent_notes[0].id) }}" class="action-card">
+    <div class="ac-icon" style="background:#ede9fe">🗺️</div>
+    <div class="ac-title">Concept Map</div>
+    <div class="ac-desc">Visual topic relationship diagram</div>
+    <div class="ac-arrow">Visualise →</div>
+  </a>
+  <a href="{{ url_for('estimator', note_id=recent_notes[0].id) }}" class="action-card">
+    <div class="ac-icon" style="background:#fef3d8">⏱️</div>
+    <div class="ac-title">Time Estimator</div>
+    <div class="ac-desc">Difficulty level and hours needed</div>
+    <div class="ac-arrow">Estimate →</div>
+  </a>
+  {% else %}
+  <div class="action-card ac-disabled">
+    <div class="ac-icon" style="background:#ede9fe">🗺️</div>
+    <div class="ac-title">Concept Map</div>
+    <div class="ac-desc">Upload a note first to enable this</div>
+  </div>
+  <div class="action-card ac-disabled">
+    <div class="ac-icon" style="background:#fef3d8">⏱️</div>
+    <div class="ac-title">Time Estimator</div>
+    <div class="ac-desc">Upload a note first to enable this</div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Recent notes -->
+{% if recent_notes %}
+<div class="section-header">
+  <h2 class="section-title" style="margin-bottom:0">📄 Recent Notes</h2>
+  <a href="{{ url_for('upload') }}" class="btn btn-sm btn-outline">View all</a>
+</div>
+<div class="notes-list">
+  {% for note in recent_notes %}
+  <div class="note-row">
+    <div class="note-icon">{{ '📕' if note.filename.endswith('.pdf') else '📄' }}</div>
+    <div class="note-info">
+      <div class="note-name">{{ note.filename }}</div>
+      <div class="note-date">{{ note.uploaded_at[:10] }}</div>
+    </div>
+    <div class="note-actions">
+      <a href="{{ url_for('summary', note_id=note.id) }}" class="btn btn-sm btn-outline">📝 Summary</a>
+      <a href="{{ url_for('concept_map', note_id=note.id) }}" class="btn btn-sm btn-outline">🗺️ Map</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">📚</div>
+  <h3>No notes yet</h3>
+  <p>Upload your first note to unlock all AI features.</p>
+  <a href="{{ url_for('upload') }}" class="btn btn-primary">📤 Upload Your First Note</a>
+</div>
+{% endif %}
+{% endblock %}

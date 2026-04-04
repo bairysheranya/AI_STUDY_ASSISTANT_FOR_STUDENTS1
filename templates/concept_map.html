@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Concept Map — {{ note.filename }}{% endblock %}
+{% block page_title %}Concept Map{% endblock %}
+{% block content %}
+<div class="page-max">
+  <div class="note-header-card">
+    <div class="nhc-icon">🗺️</div>
+    <div>
+      <div class="nhc-label">Concept Map</div>
+      <div class="nhc-title">{{ note.filename }}</div>
+    </div>
+  </div>
+  <div class="action-bar">
+    <a href="{{ url_for('summary', note_id=note.id) }}" class="btn btn-outline btn-sm">📝 Summary</a>
+    <a href="{{ url_for('estimator', note_id=note.id) }}" class="btn btn-outline btn-sm">⏱️ Estimator</a>
+    <a href="{{ url_for('upload') }}" class="btn btn-ghost btn-sm">← Back</a>
+  </div>
+  {% if map_data and map_data != 'null' %}
+  <div class="map-legend">
+    <span><span class="dot dot-amber"></span> Root Topic</span>
+    <span><span class="dot dot-navy"></span> Main Concepts</span>
+    <span><span class="dot dot-mid"></span> Sub-Topics</span>
+  </div>
+  <div class="map-wrap" id="map-canvas"></div>
+  <p class="hint mt-1" style="text-align:center">Hover over nodes for highlight</p>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">⚠️</div><h3>Could not generate map</h3>
+    <p>Try again or choose a different note.</p>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">📚 View Notes</a></div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  var MAP_DATA = {{ map_data | safe }};
+  if (MAP_DATA) drawConceptMap(MAP_DATA, 'map-canvas');
+</script>
+{% endblock %}
