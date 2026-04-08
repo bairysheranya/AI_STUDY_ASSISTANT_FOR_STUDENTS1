@@ -5,7 +5,7 @@ python-dotenv
 gunicorn
 
 
-GROQ_API_KEY
+
 # flask>=3.0.0
 # openai>=1.30.0
 # PyPDF2>=3.0.1
