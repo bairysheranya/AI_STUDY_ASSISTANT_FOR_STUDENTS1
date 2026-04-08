@@ -300,7 +300,8 @@ def extract_text(path, filename):
         try:
             pages = []
             with open(path, "rb") as f:
-                for page in PyPDF2.PdfReader(f).pages:
+              for page in reader.pages[:3]:
+
                     pages.append(page.extract_text() or "")
             return "\n".join(pages)
         except Exception as e:
