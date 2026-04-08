@@ -1,1 +1,2 @@
-web: gunicorn wsgi:application --workers 2 --bind 0.0.0.0:$PORT --timeout 120
+
+web: gunicorn app:app --timeout 120 --workers 1
