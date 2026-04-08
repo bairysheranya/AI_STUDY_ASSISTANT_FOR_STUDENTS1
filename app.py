@@ -62,6 +62,7 @@ def get_client():
             AI_READY = False
     return client
 
+
 # ─────────────────────────────────────────────────────────────────
 # App setup
 # ─────────────────────────────────────────────────────────────────
@@ -269,20 +270,20 @@ DEMO = {
 def ask_ai(system, user, max_tokens=1500, demo_key="ask"):
 
     c = get_client()
+
     if not AI_READY or c is None:
         return DEMO.get(demo_key, DEMO["ask"])
 
     try:
-        
         response = c.chat.completions.create(
-    model="llama-3.1-8b-instant",
-    messages=[
-        {"role": "system", "content": system},
-        {"role": "user", "content": user}
-    ],
-    max_tokens=max_tokens,
-    temperature=0.7
-)
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user}
+            ],
+            max_tokens=max_tokens,
+            temperature=0.7
+        )
 
         return response.choices[0].message.content.strip()
 
