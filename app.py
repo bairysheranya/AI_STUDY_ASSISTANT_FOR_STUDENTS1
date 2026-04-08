@@ -64,6 +64,8 @@ except Exception as e:
 # ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+
 # Flask session secret
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 app.config["UPLOAD_FOLDER"]      = "uploads"
