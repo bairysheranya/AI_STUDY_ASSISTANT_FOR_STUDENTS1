@@ -43,27 +43,29 @@ except ImportError:
 # ── Optional OpenAI ───────────────────────────────────────────────
 # ── Groq AI Setup ───────────────────────────────────────────────
 # ── Groq AI Setup ───────────────────────────────────────────────
-try:
-    from openai import OpenAI
-    import os
+from openai import OpenAI
 
-    client = OpenAI(
-        api_key=os.environ.get("GROQ_API_KEY"),
-        base_url="https://api.groq.com/openai/v1"
-    )
+client = None
+AI_READY = False
 
-    AI_READY = True
-
-except Exception as e:
-    print("Groq AI not available:", e)
-    client = None
-    AI_READY = False
+def get_client():
+    global client, AI_READY
+    if client is None:
+        try:
+            client = OpenAI(
+                api_key=os.environ.get("GROQ_API_KEY"),
+                base_url="https://api.groq.com/openai/v1"
+            )
+            AI_READY = True
+        except Exception as e:
+            print("Groq AI not available:", e)
+            AI_READY = False
+    return client
 
 # ─────────────────────────────────────────────────────────────────
 # App setup
 # ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-
 
 
 # Flask session secret
@@ -266,11 +268,13 @@ DEMO = {
 
 def ask_ai(system, user, max_tokens=1500, demo_key="ask"):
 
-    if not AI_READY or client is None:
+    c = get_client()
+    if not AI_READY or c is None:
         return DEMO.get(demo_key, DEMO["ask"])
 
     try:
-        response = client.chat.completions.create(
+        
+        response = c.chat.completions.create(
     model="llama-3.1-8b-instant",
     messages=[
         {"role": "system", "content": system},
@@ -300,8 +304,8 @@ def extract_text(path, filename):
         try:
             pages = []
             with open(path, "rb") as f:
-              for page in reader.pages[:3]:
-
+                reader = PyPDF2.PdfReader(f)
+                for page in reader.pages[:3]:
                     pages.append(page.extract_text() or "")
             return "\n".join(pages)
         except Exception as e:
@@ -471,7 +475,7 @@ def summary(note_id):
             "## Core Concepts\nDefinitions of 3-5 key terms in bold.\n\n"
             "## Quick Revision\nA 3-sentence paragraph a student can memorise quickly."
         ),
-        user=note["content"][:4000],
+        user=note["content"][:1500],
         demo_key="summary"
     )
     return render_template("summary.html", note=note, summary_text=result)
